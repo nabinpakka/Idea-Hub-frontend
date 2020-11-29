@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Modal from "react-modal";
 import AlertDialog from "../utilities/AlertDialog";
-
+import AuthService from '../../services/auth/Auth.Service';
 function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
 
     const [state, setState] = useState({
@@ -15,6 +15,8 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
     const [alertMessage, setAlertMessage] = useState("");
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
 
+    const [alertTopic, setAlertTopic] = useState("");
+
     function onChangeHandler(event){
         const value = event.target.value;
         setState({
@@ -23,16 +25,25 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
         });
     }
 
+    function closeDialog(){
+        setState({
+            username: "",
+            password: "",
+            confirmPassword: ""
+        })
+        setIsSignUpDialogOpen(false)
+    }
 
     function validator(){
         if(state.password.length >0 && state.username.length > 0 && state.confirmPassword.length > 0){
             if(state.password !== state.confirmPassword){
                 setAlertMessage("Password does not match!")
+                setAlertTopic("ALERT")
                 setIsAlertDialogOpen(true);
-                return true;
+                return false;
             }
             else{
-                return false;
+                return true;
             }
         }else{
             setAlertMessage("Please fill in all the fields");
@@ -44,6 +55,15 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
     function signUpHandler(){
         if(validator()){
             //network call for signup
+            AuthService.register(state.username, state.password, state.role)
+                .then((r)  => {
+                    setAlertTopic("SUCCESSFUL");
+                    setAlertMessage("Successfully signed up");
+                    setIsAlertDialogOpen(true);
+                    console.log(r)
+                });
+        }else{
+            console.log("not valid")
         }
 
     }
@@ -64,9 +84,7 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
                     borderRadius          : '20px'
                 }
             }}
-            onRequestClose={()=>{
-                setIsSignUpDialogOpen(false)
-            }}
+            onRequestClose={closeDialog}
         >
             <div style={{
                 display:'flex',
@@ -92,7 +110,9 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
                     width: '320px',
                     marginTop:'24px',
                     borderRadius:'5px'
-                }} onChange={onChangeHandler}>
+                }} onChange={onChangeHandler}
+                value={state.role}
+                >
                     <option  selected={true} value={"AUTHOR"}>AUTHOR</option>
                     <option value={"PUBLICATION_HOUSE"}>PUBLICATION_HOUSE</option>
                 </select>
@@ -116,7 +136,7 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
                 />
                 <button className={'field-submit-button'} onClick={signUpHandler}>Sign Up</button>
             </div>
-            <AlertDialog isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen} alertMessage={alertMessage}/>
+            <AlertDialog isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen} topic={alertTopic} alertMessage={alertMessage}/>
         </Modal>
     );
 }

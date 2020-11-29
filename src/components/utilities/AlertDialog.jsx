@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from "react-modal";
 
-function AlertDialog({isAlertDialogOpen,setIsAlertDialogOpen,alertMessage}) {
+function AlertDialog({isAlertDialogOpen,setIsAlertDialogOpen,topic,alertMessage}) {
     return (
         <Modal
             ariaHideApp={false}
@@ -27,7 +27,7 @@ function AlertDialog({isAlertDialogOpen,setIsAlertDialogOpen,alertMessage}) {
                 alignItems: 'center',
                 borderRadius:'20px',
                 backgroundColor:'#fff'}}>
-                <h1 style={{color:'red'}}>Alert!!</h1>
+                <h1 style={{color:topic==="ALERT" ? 'red':'green'}}>{topic}</h1>
                 <p>{alertMessage}</p>
 
             </div>

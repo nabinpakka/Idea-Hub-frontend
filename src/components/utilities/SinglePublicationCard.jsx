@@ -1,6 +1,6 @@
 import React from 'react';
 import {Card } from 'react-bootstrap';
-function SinglePublicationCard({fake}) {
+function SinglePublicationCard({data}) {
 
     return (
             <Card
@@ -22,10 +22,10 @@ function SinglePublicationCard({fake}) {
                     textAlign:'center'
                 }}
                 >
-                    {fake.title}
+                    {data.title}
                 </Card.Title>
                 <label style={{paddingLeft:'8px',paddingRight:'8px'}}>
-                    {fake.author} - {fake.publicationHouse}
+                    - {data.publicationHouse}
                 </label>
                 <p style={{
                     display:"block",
@@ -37,7 +37,7 @@ function SinglePublicationCard({fake}) {
                     paddingLeft:'8px',
                     paddingRight:'8px',
                     textAlign:'justify'
-                }}>{fake.abstract}</p>
+                }}>{data.abst}</p>
             </Card>
     );
 }

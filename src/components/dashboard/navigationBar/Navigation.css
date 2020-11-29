@@ -35,6 +35,7 @@ nav.responsive-toolbar{
 .nav-bar-links{
     color: white;
     text-decoration: none;
+    width: 200px;
     margin-right: 24px;
 
 }

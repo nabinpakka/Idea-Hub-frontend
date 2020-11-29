@@ -1,8 +1,9 @@
 import React ,{useState}from 'react';
 import AlertDialog from "../utilities/AlertDialog";
-import {Link} from "react-router-dom";
-function Login({signUpHandler}) {
+import {Link,BrowserRouter as Router} from "react-router-dom";
+import AuthService from '../../services/auth/Auth.Service';
 
+function Login(props) {
     const [state, setState] = useState({
         username:"",
         password:""
@@ -34,7 +35,23 @@ function Login({signUpHandler}) {
     function handleSubmit(event){
         event.preventDefault();
         if(validateForm()){
+            AuthService.login(state.username, state.password).then(
+                (response)=>{
+                    //the response is true if user has been logged in
+                    //route to other page
+                    window.location = "/dashboard/home"
 
+                },
+                (error) =>{
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+                    console.log(resMessage);
+                }
+            )
         }
         //api call here
     }
@@ -92,10 +109,10 @@ function Login({signUpHandler}) {
                         marginLeft:'128px',
                         cursor:"pointer"
                     }}
-                    onClick={signUpHandler}
+                    onClick={props.signUpHandler}
                 >Sign up</h4>
             </div>
-            <AlertDialog isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen} alertMessage={alertMessage}/>
+            <AlertDialog isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen} topic={"ALERT"} alertMessage={alertMessage}/>
 
         </form>
     );

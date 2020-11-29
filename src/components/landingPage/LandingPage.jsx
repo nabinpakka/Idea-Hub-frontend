@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import {useHistory,useLocation} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+
 import Logo from "../utilities/Logo";
 import Login from "./Login";
 import Quotes from "./Quotes";
@@ -17,13 +17,20 @@ function LandingPage() {
         setIsSignUpDialogOpen(true);
     }
 
-    // let history = useHistory();
-    // let location = useLocation();
-    // let {from } = location.state || {from:{pathname: "/dashboard"}}
-    // function onLogin(){
-    //     history.replace(from)
-    //
-    // }
+    useEffect(()=>{
+        //checking if user is already logged in
+        //if user is already logged in then local storage should contain jwt
+
+        //as the jwt stored locally, it persists even after termination of program without calling logout
+        //will replace it with apicontext state
+        localStorage.removeItem("jwt")
+        let jwt = localStorage.getItem("jwt");
+        console.log(jwt)
+        if(jwt !==null && jwt!==""){
+            //the user is already logged in so direct him to dashboard
+            window.location = "/dashboard/home"
+        }
+    },[])
 
     return (
         <div style={{

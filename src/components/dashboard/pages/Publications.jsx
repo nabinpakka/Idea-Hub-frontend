@@ -1,12 +1,10 @@
-import React, {useState} from 'react';
-import {FakeData as fakes} from "../../utilities/FakeData";
+import React, {useEffect, useState} from 'react';
 import SinglePublicationCard from "../../utilities/SinglePublicationCard";
 
 import PublicationDialog from "./PublicationDialog";
+import PublicationService from "../../../services/dashboard/Publication.Service";
 
 function Publications(props) {
-
-
 
     const [isPublicationDialogOpen, setIsPublicationDialogOpen] = useState(false);
     const [clickedPublication, setClickedPublication] = useState({
@@ -16,9 +14,21 @@ function Publications(props) {
             publicationHouse:"",
             abstract:"",
             detail:"",
-            approved:false
+            approved:false,
+            fileId:""
         }
     );
+
+    const [datas, setDatas] = useState([{}]);
+
+    useEffect(()=>{
+        if(props.role !==null){
+            PublicationService.getMyPublications(props.role).then((response)=>{
+                console.log(response)
+                setDatas(response)
+            })
+        }
+    },[props.role])
 
     function publicationClickHandler(uuid){
         setIsPublicationDialogOpen(true)
@@ -26,16 +36,16 @@ function Publications(props) {
         //getting the fake object
         //the filter object returns a list
         //the list should contain only one object with given uuid
-        let fake = fakes.filter((fake)=>fake.uuid === uuid)[0]
-        console.log(fake)
+        let data = datas.filter((data)=>data.uuid === uuid)[0]
         setClickedPublication({
-            title: fake.title,
-            publicationHouse: fake.publicationHouse,
+            title: data.title,
+            publicationHouse: data.publicationHouse,
             uuid:uuid,
-            author:fake.author,
-            abstract: fake.abstract,
-            detail:fake.detail,
-            approved: fake.approved
+            author:data.authorId,
+            abstract: data.abst,
+            detail:data.detail,
+            approved: data.approved,
+            fileId: data.fileId
 
         })
         console.log(clickedPublication.title)
@@ -43,9 +53,6 @@ function Publications(props) {
         console.log(uuid)
     }
 
-    function closeModal(){
-        setIsPublicationDialogOpen(false);
-    }
 
     return (
         <div style={{
@@ -57,9 +64,9 @@ function Publications(props) {
 
         }}>
             {
-                fakes.map((fake)=>
-                    <div  key={fake.uuid} onClick={()=>publicationClickHandler(fake.uuid)}>
-                        <SinglePublicationCard key={fake.uuid} fake={fake}/>
+                datas.map((data)=>
+                    <div  key={data.uuid} onClick={()=>publicationClickHandler(data.uuid)}>
+                        <SinglePublicationCard key={data.uuid} data={data}/>
                     </div>
 
                 )

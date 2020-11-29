@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
+import PublicationService from '../../../services/dashboard/Publication.Service'
+
 
 function ComposePublication(props) {
 
     const [state, setState] = useState({
         title:"",
         publicationHouse:"",
-        abstract:"",
+        abst:"",
         detail:""
     });
 
@@ -27,18 +29,52 @@ function ComposePublication(props) {
     }
 
     function validateForm(){
-        if(state.title.length>0 && state.abstract.length >0
+        if(state.title.length>0 && state.abst.length >0
             && state.detail.length >0 && state.publicationHouse.length >0){
             return true;
         }
         else{
-            console.log("Invalid username or password!")
+            console.log("Please fill all the fields")
             return false;
         }
     }
 
     function handleSubmit() {
+        if(validateForm()){
+            let data = new FormData();
+            // data.append("file",new Blob(files,{
+            //     type:'multipart/form-data'
+            // }))
+            data.append("file",files[0])
 
+            data.append("title",state.title)
+            data.append("abst",state.abst)
+            data.append("detail",state.detail)
+            data.append("publicationHouse",state.publicationHouse)
+
+            // data.append('title',
+            //     new Blob([JSON.stringify(state.title)], {
+            //         type: 'multipart/form-data'
+            //     }));
+            // data.append('abst',
+            //     new Blob([JSON.stringify(state.abst)], {
+            //         type: 'multipart/form-data'
+            //     }));
+            // data.append('detail',
+            //     new Blob([JSON.stringify(state.detail)], {
+            //         type: 'multipart/form-data'
+            //     }));
+            // data.append('publicationHouse',
+            //     new Blob([JSON.stringify(state.publicationHouse)], {
+            //         type: 'multipart/form-data '
+            //     }));
+
+            PublicationService.uploadPublications(
+                data
+            ).then( (response) =>{
+
+            });
+        }
     }
 
     return (
@@ -84,9 +120,9 @@ function ComposePublication(props) {
                     className={"field-input"}
                     style={{width:'480px',height:'128px'}}
                     type={'text'}
-                    name={'abstract'}
+                    name={'abst'}
                     placeholder={"Abstract"}
-                    value={state.abstract}
+                    value={state.abst}
                     onChange={onChangeHandler}
                 />
             </div>
@@ -121,7 +157,6 @@ function ComposePublication(props) {
                 style={{width:'480px'}}
                 type={"submit"}
                 onClick={handleSubmit}
-                disabled={!validateForm()}
             >
                 Compose
             </button>
