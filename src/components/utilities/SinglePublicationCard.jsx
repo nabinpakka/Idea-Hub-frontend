@@ -1,5 +1,6 @@
 import React from 'react';
 import {Card } from 'react-bootstrap';
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 function SinglePublicationCard({data}) {
 
     return (
@@ -24,8 +25,13 @@ function SinglePublicationCard({data}) {
                 >
                     {data.title}
                 </Card.Title>
-                <label style={{paddingLeft:'8px',paddingRight:'8px'}}>
-                    - {data.publicationHouse}
+                <label style={{paddingLeft:'8px',
+                    paddingRight:'8px',
+                    display:'flex',
+                    alignItems:"center"}}>
+                    {data.publicationType} - {data.publicationHouse}
+                    {data.approved ? <CheckBoxIcon style={{color:'green',marginLeft:'8px'}}/>
+                        : <p style={{color:'#808080',marginLeft:'8px'}}>Pending...</p>}
                 </label>
                 <p style={{
                     display:"block",

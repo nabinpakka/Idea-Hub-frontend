@@ -6,11 +6,11 @@ import logout from "../../../assets/Logout.png"
 import './Navigation.css'
 import Logo from "../../utilities/Logo";
 import Home from "../pages/Home";
-import Publications from "../pages/Publications";
+import MyPublications from "../pages/MyPublications";
 import ToReview from "../pages/ToReview";
 import ComposePublication from "../pages/ComposePublication";
 
-function Navigation({ background,hoverBackground}) {
+function Navigation(props) {
 
     const navLinks=[
         {
@@ -19,8 +19,8 @@ function Navigation({ background,hoverBackground}) {
         },
 
         {
-            text:'Publications',
-            path:'/dashboard/publications',
+            text:'My MyPublications',
+            path:'/dashboard/myPublications',
         },
         {
             text:'To Review',
@@ -45,6 +45,7 @@ function Navigation({ background,hoverBackground}) {
     useEffect(()=>{
         AuthService.getCurrentUser().then( (response)=>{
             setRole(response)
+            localStorage.setItem("role",response)
             console.log("navigation"+response)
         })
     },[])
@@ -64,8 +65,7 @@ function Navigation({ background,hoverBackground}) {
         <Router>
             {
                 role ? <div style={{display:'flex',flexDirection:'column'}}>
-                    <nav className={"responsive-toolbar"}
-                         style={background}>
+                    <nav className={"responsive-toolbar"}>
                         <figure className={"logo-figure"} >
                             <Logo/>
                         </figure>
@@ -74,7 +74,7 @@ function Navigation({ background,hoverBackground}) {
                                 <li className={"nav-bar-list"}
                                     onMouseEnter={()=>setHoverIndex(index)}
                                     onMouseLeave={()=>setHoverIndex(-1)}
-                                    style={{background:hoverIndex===index ? (hoverBackground || '#999') :""}}
+                                    style={{background:hoverIndex===index ? ( '#999') :""}}
                                 >
                                     <Link to={link.path}
                                           className={"nav-bar-links"}
@@ -107,8 +107,8 @@ function Navigation({ background,hoverBackground}) {
                             <Route exact path={"/dashboard/home"}>
                                 <Home/>
                             </Route>
-                            <Route exact path={"/dashboard/publications"}>
-                                <Publications role={role}/>
+                            <Route exact path={"/dashboard/myPublications"}>
+                                <MyPublications role={role}/>
                             </Route>
                             <Route exact path={"/dashboard/toReview"}>
                                 <ToReview role={role}/>

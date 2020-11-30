@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Modal from "react-modal";
-import AlertDialog from "../utilities/AlertDialog";
+import MessageDialog from "../utilities/MessageDialog";
 import AuthService from '../../services/auth/Auth.Service';
 function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
 
@@ -13,7 +13,7 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
 
 
     const [alertMessage, setAlertMessage] = useState("");
-    const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+    const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
 
     const [alertTopic, setAlertTopic] = useState("");
 
@@ -39,7 +39,7 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
             if(state.password !== state.confirmPassword){
                 setAlertMessage("Password does not match!")
                 setAlertTopic("ALERT")
-                setIsAlertDialogOpen(true);
+                setIsMessageDialogOpen(true);
                 return false;
             }
             else{
@@ -47,7 +47,7 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
             }
         }else{
             setAlertMessage("Please fill in all the fields");
-            setIsAlertDialogOpen(true)
+            setIsMessageDialogOpen(true)
             return false;
         }
     }
@@ -59,7 +59,7 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
                 .then((r)  => {
                     setAlertTopic("SUCCESSFUL");
                     setAlertMessage("Successfully signed up");
-                    setIsAlertDialogOpen(true);
+                    setIsMessageDialogOpen(true);
                     console.log(r)
                 });
         }else{
@@ -136,7 +136,7 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
                 />
                 <button className={'field-submit-button'} onClick={signUpHandler}>Sign Up</button>
             </div>
-            <AlertDialog isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen} topic={alertTopic} alertMessage={alertMessage}/>
+            <MessageDialog isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen} topic={alertTopic} message={alertMessage}/>
         </Modal>
     );
 }

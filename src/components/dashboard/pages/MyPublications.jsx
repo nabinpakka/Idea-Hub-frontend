@@ -3,8 +3,9 @@ import SinglePublicationCard from "../../utilities/SinglePublicationCard";
 
 import PublicationDialog from "./PublicationDialog";
 import PublicationService from "../../../services/dashboard/Publication.Service";
+import MessageDialog from "../../utilities/MessageDialog";
 
-function Publications(props) {
+function MyPublications(props) {
 
     const [isPublicationDialogOpen, setIsPublicationDialogOpen] = useState(false);
     const [clickedPublication, setClickedPublication] = useState({
@@ -15,11 +16,13 @@ function Publications(props) {
             abstract:"",
             detail:"",
             approved:false,
-            fileId:""
+            fileId:"",
+            publicationType:""
         }
     );
 
     const [datas, setDatas] = useState([{}]);
+    const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
 
     useEffect(()=>{
         if(props.role !==null){
@@ -29,6 +32,13 @@ function Publications(props) {
             })
         }
     },[props.role])
+
+    useEffect(()=>{
+        if(datas ===null || datas.length ===0){
+            console.log(datas)
+            setIsMessageDialogOpen(true)
+        }
+    },[datas])
 
     function publicationClickHandler(uuid){
         setIsPublicationDialogOpen(true)
@@ -45,7 +55,8 @@ function Publications(props) {
             abstract: data.abst,
             detail:data.detail,
             approved: data.approved,
-            fileId: data.fileId
+            fileId: data.fileId,
+            publicationType: data.publicationType
 
         })
         console.log(clickedPublication.title)
@@ -64,19 +75,18 @@ function Publications(props) {
 
         }}>
             {
-                datas.map((data)=>
-                    <div  key={data.uuid} onClick={()=>publicationClickHandler(data.uuid)}>
-                        <SinglePublicationCard key={data.uuid} data={data}/>
+                datas.length>0 ? datas.map((data)=>
+                    <div key={data.uuid} onClick={()=>publicationClickHandler(data.uuid)}>
+                        <SinglePublicationCard data={data} />
                     </div>
-
-                )
+                ) : <MessageDialog topic={"ALERT"} message={"You do not have any publication."} isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen}/>
             }
 
             <PublicationDialog isPublicationDialogOpen={isPublicationDialogOpen}
                                setIsPublicationDialogOpen={setIsPublicationDialogOpen}
-                               clickedPublication={clickedPublication}/>
+                               clickedPublication={clickedPublication} isReview={false}/>
         </div>
     );
 }
 
-export default Publications;
+export default MyPublications;

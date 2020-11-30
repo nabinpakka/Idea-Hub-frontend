@@ -23,7 +23,7 @@ function LandingPage() {
 
         //as the jwt stored locally, it persists even after termination of program without calling logout
         //will replace it with apicontext state
-        localStorage.removeItem("jwt")
+
         let jwt = localStorage.getItem("jwt");
         console.log(jwt)
         if(jwt !==null && jwt!==""){

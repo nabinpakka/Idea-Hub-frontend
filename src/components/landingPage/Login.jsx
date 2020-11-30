@@ -1,16 +1,20 @@
-import React ,{useState}from 'react';
-import AlertDialog from "../utilities/AlertDialog";
+import React, {useContext, useState} from 'react';
+import MessageDialog from "../utilities/MessageDialog";
 import {Link,BrowserRouter as Router} from "react-router-dom";
 import AuthService from '../../services/auth/Auth.Service';
 
+
 function Login(props) {
+
+
+
     const [state, setState] = useState({
         username:"",
         password:""
     });
 
     const [alertMessage, setAlertMessage] = useState("");
-    const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+    const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
 
     function validateForm(){
         if(state.username.length > 0 && state.password.length > 0){
@@ -18,7 +22,7 @@ function Login(props) {
         }
         else{
             setAlertMessage("Please fill all fields");
-            setIsAlertDialogOpen(true);
+            setIsMessageDialogOpen(true);
             return false;
         }
 
@@ -49,7 +53,8 @@ function Login(props) {
                             error.response.data.message) ||
                         error.message ||
                         error.toString();
-                    console.log(resMessage);
+                    setAlertMessage(resMessage)
+                    setIsMessageDialogOpen(true)
                 }
             )
         }
@@ -112,10 +117,10 @@ function Login(props) {
                     onClick={props.signUpHandler}
                 >Sign up</h4>
             </div>
-            <AlertDialog isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen} topic={"ALERT"} alertMessage={alertMessage}/>
+            <MessageDialog isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen} topic={"ALERT"} message={alertMessage}/>
 
         </form>
     );
 }
 
-export default Login;
+export default Login

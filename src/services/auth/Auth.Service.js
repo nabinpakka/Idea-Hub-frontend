@@ -1,6 +1,5 @@
 import axios from '../axiosConfig';
 
-
 const register =async  (username,password,role)=>{
     return axios.post("/auth/signup",{
         username,
@@ -58,7 +57,8 @@ const getAuthors=async  ()=>{
     return axios.get(
         "/auth/authors")
         .then((response) =>{
-
+            console.log(response.data)
+            return response.data
     }).catch(e=>console.log(e))
 };
 export default {

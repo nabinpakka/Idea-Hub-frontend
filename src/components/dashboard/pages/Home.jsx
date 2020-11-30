@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import SinglePublicationCard from "../../utilities/SinglePublicationCard";
 import PublicationDialog from "./PublicationDialog";
 import PublicationService from "../../../services/dashboard/Publication.Service";
-import AuthService from '../../../services/auth/Auth.Service';
-import AlertDialog from "../../utilities/AlertDialog";
+import MessageDialog from "../../utilities/MessageDialog";
 
 function Home() {
+
 
     const [isPublicationDialogOpen, setIsPublicationDialogOpen] = useState(false);
     const [clickedPublication, setClickedPublication] = useState({
@@ -16,14 +16,15 @@ function Home() {
         abstract:"",
         detail:"",
         approved:false,
-        fileId:""
+        fileId:"",
+        publicationType:""
         }
     );
     const [datas, setDatas] = useState([{
 
     }]);
 
-    const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+    const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
 
     //loading data
     useEffect(()=>{
@@ -34,12 +35,8 @@ function Home() {
     },[])
 
     useEffect(()=>{
-        AuthService.getCurrentUser();
-    },[])
-
-    useEffect(()=>{
-        if(datas ===null){
-            setIsAlertDialogOpen(true)
+        if(datas ===null || datas.length===0){
+            setIsMessageDialogOpen(true)
         }
     },[datas])
 
@@ -58,7 +55,8 @@ function Home() {
             abstract: data.abst,
             detail:data.detail,
             approved: data.approved,
-            fileId: data.fileId
+            fileId: data.fileId,
+            publicationType: data.publicationType
         })
         console.log(clickedPublication.title)
         // setClickedPublication(fake)
@@ -74,16 +72,17 @@ function Home() {
 
         }}>
             {
-                datas ? datas.map((data)=>
+                datas.length > 0? datas.map((data)=>
                     <div key={data.uuid} onClick={()=>publicationClickHandler(data.uuid)}>
                         <SinglePublicationCard data={data} />
                     </div>
-                ) : <AlertDialog topic={"ALERT"} alertMessage={"No publication found"} isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen}/>
+                ) : <MessageDialog topic={"ALERT"} message={"No publication found"} isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen}/>
             }
 
             <PublicationDialog isPublicationDialogOpen={isPublicationDialogOpen}
                                setIsPublicationDialogOpen={setIsPublicationDialogOpen}
                                 clickedPublication={clickedPublication}
+                               isReview={false}
             />
         </div>
 

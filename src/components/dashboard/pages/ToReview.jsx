@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import SinglePublicationCard from "../../utilities/SinglePublicationCard";
 import PublicationService from "../../../services/dashboard/Publication.Service";
 import PublicationDialog from "./PublicationDialog";
+import MessageDialog from "../../utilities/MessageDialog";
 
 function ToReview(props) {
 
@@ -14,12 +15,15 @@ function ToReview(props) {
             abstract:"",
             detail:"",
             approved:false,
-            fileId:""
+            fileId:"",
+            publicationType:""
         }
     );
 
     const [datas, setDatas] = useState([{}]);
     const [reload, setReload] = useState(false);
+
+    const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
 
     useEffect(()=>{
         console.log("to review"+ props.role)
@@ -31,6 +35,12 @@ function ToReview(props) {
         }
 
     },[reload])
+
+    useEffect(()=>{
+        if(datas ===null || datas.length===0){
+            setIsMessageDialogOpen(true)
+        }
+    },[datas])
 
     function publicationClickHandler(uuid){
         setIsPublicationDialogOpen(true)
@@ -45,8 +55,8 @@ function ToReview(props) {
             abstract: data.abst,
             detail:data.detail,
             approved: data.approved,
-            fileId: data.fileId
-
+            fileId: data.fileId,
+            publicationType: data.publicationType
         })
         console.log(clickedPublication.title)
         // setClickedPublication(fake)
@@ -62,12 +72,11 @@ function ToReview(props) {
 
         }}>
             {
-                datas.map((data)=>
-                    <div  key={data.uuid} onClick={()=>publicationClickHandler(data.uuid)}>
-                        <SinglePublicationCard key={data.uuid} data={data}/>
+                datas.length>0 ? datas.map((data)=>
+                    <div key={data.uuid} onClick={()=>publicationClickHandler(data.uuid)}>
+                        <SinglePublicationCard data={data} />
                     </div>
-
-                )
+                ) : <MessageDialog topic={"ALERT"} message={"No publication to review"} isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen}/>
             }
             <PublicationDialog isPublicationDialogOpen={isPublicationDialogOpen}
                                setIsPublicationDialogOpen={setIsPublicationDialogOpen}

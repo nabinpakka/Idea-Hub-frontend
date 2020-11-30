@@ -61,14 +61,20 @@ const updateReview=async (id,isApproved)=>{
 
 }
 
+const assignReviewers=async (publicationId, reviewers)=>{
+    return await axios.put(PUB+"reviewer/"+ publicationId,reviewers).then((response)=>{
+        console.log("assignReviewers"+ response.data)
+    })
+}
+
 const uploadPublications=async(data)=>{
-    const jwt = localStorage.getItem("jwt");
     return await axios.post(PUB,data,{
         header:{
             "Content-Type": "multipart/form-data"
         }
     }).then((response)=>{
         console.log("upload"+response)
+        return response.data
     }).catch(e=>console.log(e))
 }
 
@@ -78,5 +84,6 @@ export default {
     getMyPublications,
     getPublicationsToReview,
     updateReview,
+    assignReviewers,
     uploadPublications
 }

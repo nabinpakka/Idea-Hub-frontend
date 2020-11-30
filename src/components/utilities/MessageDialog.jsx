@@ -1,11 +1,11 @@
 import React from 'react';
 import Modal from "react-modal";
 
-function AlertDialog({isAlertDialogOpen,setIsAlertDialogOpen,topic,alertMessage}) {
+function MessageDialog({isMessageDialogOpen,setIsMessageDialogOpen,topic,message}) {
     return (
         <Modal
             ariaHideApp={false}
-            isOpen={isAlertDialogOpen}
+            isOpen={isMessageDialogOpen}
             style={{
                 // overlay: {
                 // },
@@ -20,7 +20,7 @@ function AlertDialog({isAlertDialogOpen,setIsAlertDialogOpen,topic,alertMessage}
                     autofocus             : true
                 }
             }}
-            onRequestClose={()=>setIsAlertDialogOpen(false)}
+            onRequestClose={()=>setIsMessageDialogOpen(false)}
         >
             <div style={{display:'flex',
                 flexDirection:'column',
@@ -28,7 +28,7 @@ function AlertDialog({isAlertDialogOpen,setIsAlertDialogOpen,topic,alertMessage}
                 borderRadius:'20px',
                 backgroundColor:'#fff'}}>
                 <h1 style={{color:topic==="ALERT" ? 'red':'green'}}>{topic}</h1>
-                <p>{alertMessage}</p>
+                <p>{message}</p>
 
             </div>
 
@@ -36,4 +36,4 @@ function AlertDialog({isAlertDialogOpen,setIsAlertDialogOpen,topic,alertMessage}
     );
 }
 
-export default AlertDialog;
+export default MessageDialog;

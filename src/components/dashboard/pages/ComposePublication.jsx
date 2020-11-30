@@ -1,17 +1,22 @@
 import React, {useState} from 'react';
 import PublicationService from '../../../services/dashboard/Publication.Service'
+import MessageDialog from "../../utilities/MessageDialog";
 
 
 function ComposePublication(props) {
 
     const [state, setState] = useState({
         title:"",
+        publicationType:"",
         publicationHouse:"",
         abst:"",
-        detail:""
+        detail:"",
     });
 
     const [files, setFiles] = useState([]);
+    const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
+    const [message, setMessage] = useState("");
+    const [messageTopic, setMessageTopic] = useState("");
 
     function onChangeHandler(event){
         const value = event.target.value;
@@ -30,7 +35,7 @@ function ComposePublication(props) {
 
     function validateForm(){
         if(state.title.length>0 && state.abst.length >0
-            && state.detail.length >0 && state.publicationHouse.length >0){
+            && state.detail.length >0 && state.publicationHouse.length >0 && state.publicationType.length >0){
             return true;
         }
         else{
@@ -45,36 +50,33 @@ function ComposePublication(props) {
             // data.append("file",new Blob(files,{
             //     type:'multipart/form-data'
             // }))
-            data.append("file",files[0])
 
+            //multiple file access is not implemented yet
+            data.append("file",files[0])
             data.append("title",state.title)
             data.append("abst",state.abst)
             data.append("detail",state.detail)
             data.append("publicationHouse",state.publicationHouse)
-
-            // data.append('title',
-            //     new Blob([JSON.stringify(state.title)], {
-            //         type: 'multipart/form-data'
-            //     }));
-            // data.append('abst',
-            //     new Blob([JSON.stringify(state.abst)], {
-            //         type: 'multipart/form-data'
-            //     }));
-            // data.append('detail',
-            //     new Blob([JSON.stringify(state.detail)], {
-            //         type: 'multipart/form-data'
-            //     }));
-            // data.append('publicationHouse',
-            //     new Blob([JSON.stringify(state.publicationHouse)], {
-            //         type: 'multipart/form-data '
-            //     }));
+            data.append("publicationType",state.publicationType)
 
             PublicationService.uploadPublications(
                 data
             ).then( (response) =>{
+                setMessageTopic("SUCCESSFUL")
+                setMessage("Publication composed !")
+                // setIsMessageDialogOpen(true)
+            }).catch((response)=>{
+                setMessageTopic("ALERT")
+                setMessage("Upload failed")
 
             });
         }
+        else{
+            setMessageTopic("ALERT")
+            setMessage("Please fill all the fields")
+            // setIsMessageDialogOpen(true)
+        }
+        setIsMessageDialogOpen(true)
     }
 
     return (
@@ -82,7 +84,8 @@ function ComposePublication(props) {
             backgroundColor:'#fff',
             width:'100%',
             marginTop:'64px',
-            height:'100vh',
+            height:'120vh',
+            overflow:'hidden',
             display:"flex",
             flexDirection:"column",
             alignItems:'center'
@@ -103,7 +106,18 @@ function ComposePublication(props) {
 
             <div className={"field-input-container"} >
                 <input
-                    autoFocus={true}
+                    className={"field-input"}
+                    style={{width:'480px'}}
+                    type={'text'}
+                    name={'publicationType'}
+                    placeholder={" Publication Type"}
+                    value={state.publicationType}
+                    onChange={onChangeHandler}
+                />
+            </div>
+
+            <div className={"field-input-container"} >
+                <input
                     className={"field-input"}
                     style={{width:'480px'}}
                     type={'text'}
@@ -116,9 +130,8 @@ function ComposePublication(props) {
 
             <div className={"field-input-container"} >
                 <textarea
-                    autoFocus={true}
                     className={"field-input"}
-                    style={{width:'480px',height:'128px'}}
+                    style={{width:'480px',height:'128px',lineHeight:'1.2rem'}}
                     type={'text'}
                     name={'abst'}
                     placeholder={"Abstract"}
@@ -128,9 +141,8 @@ function ComposePublication(props) {
             </div>
             <div className={"field-input-container"} >
                 <textarea
-                    autoFocus={true}
                     className={"field-input"}
-                    style={{width:'480px',height:'128px'}}
+                    style={{width:'480px',height:'128px',lineHeight:'1.2rem'}}
                     type={'text'}
                     name={'detail'}
                     placeholder={"Detail"}
@@ -143,8 +155,9 @@ function ComposePublication(props) {
                 width:'480px',
                 marginTop:'24px'
             }}>
-                <label className="custom-file-upload">
-                    <input style={{width:'200px'}} type="file" multiple onChange={filesHandler} />
+                <label className="custom-file-upload" style={{display:'flex',flexDirection:'row',justifyContent:'center'}}>
+                    <input style={{width:'400px'}} type="file" multiple onChange={filesHandler} />
+                    {files.length ===0? <p style={{fontSize:'10px',verticalAlign:'top'}}>max:200MB</p>:""}
                 </label>
                 {files.length >1 && <div style={{display:'flex',flexDirection:'column'}}>
                     {files.map((file,index) =>
@@ -160,7 +173,12 @@ function ComposePublication(props) {
             >
                 Compose
             </button>
-
+            <MessageDialog
+                setIsMessageDialogOpen={setIsMessageDialogOpen}
+                isMessageDialogOpen={isMessageDialogOpen}
+                topic={messageTopic}
+                message={message}
+            />
         </div>
     );
 }
