@@ -13,7 +13,7 @@ function Login(props) {
         password:""
     });
 
-    const [alertMessage, setAlertMessage] = useState("");
+    const [message, setMessage] = useState("");
     const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
 
     function validateForm(){
@@ -21,7 +21,7 @@ function Login(props) {
             return true;
         }
         else{
-            setAlertMessage("Please fill all fields");
+            setMessage("Please fill all fields");
             setIsMessageDialogOpen(true);
             return false;
         }
@@ -53,7 +53,7 @@ function Login(props) {
                             error.response.data.message) ||
                         error.message ||
                         error.toString();
-                    setAlertMessage(resMessage)
+                    setMessage(resMessage)
                     setIsMessageDialogOpen(true)
                 }
             )
@@ -117,7 +117,7 @@ function Login(props) {
                     onClick={props.signUpHandler}
                 >Sign up</h4>
             </div>
-            <MessageDialog isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen} topic={"ALERT"} message={alertMessage}/>
+            <MessageDialog isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen} topic={"ALERT"} message={message}/>
 
         </form>
     );

@@ -12,16 +12,17 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
     });
 
 
-    const [alertMessage, setAlertMessage] = useState("");
+    const [message, setMessage] = useState("");
     const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
 
-    const [alertTopic, setAlertTopic] = useState("");
+    const [messageTopic, setMessageTopic] = useState("");
 
     function onChangeHandler(event){
         const value = event.target.value;
         setState({
             ...state,
             [event.target.name]: value
+
         });
     }
 
@@ -37,8 +38,8 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
     function validator(){
         if(state.password.length >0 && state.username.length > 0 && state.confirmPassword.length > 0){
             if(state.password !== state.confirmPassword){
-                setAlertMessage("Password does not match!")
-                setAlertTopic("ALERT")
+                setMessage("Password does not match!")
+                setMessageTopic("ALERT")
                 setIsMessageDialogOpen(true);
                 return false;
             }
@@ -46,7 +47,8 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
                 return true;
             }
         }else{
-            setAlertMessage("Please fill in all the fields");
+            setMessageTopic("ALERT")
+            setMessage("Please fill in all the fields");
             setIsMessageDialogOpen(true)
             return false;
         }
@@ -57,13 +59,16 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
             //network call for signup
             AuthService.register(state.username, state.password, state.role)
                 .then((r)  => {
-                    setAlertTopic("SUCCESSFUL");
-                    setAlertMessage("Successfully signed up");
+                    setMessageTopic("SUCCESSFUL");
+                    setMessage("Successfully signed up");
                     setIsMessageDialogOpen(true);
                     console.log(r)
                 });
         }else{
             console.log("not valid")
+            setMessageTopic("ALERT");
+            setMessage("");
+            setIsMessageDialogOpen(true);
         }
 
     }
@@ -136,7 +141,7 @@ function SignUp({isSignUpDialogOpen,setIsSignUpDialogOpen}) {
                 />
                 <button className={'field-submit-button'} onClick={signUpHandler}>Sign Up</button>
             </div>
-            <MessageDialog isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen} topic={alertTopic} message={alertMessage}/>
+            <MessageDialog isMessageDialogOpen={isMessageDialogOpen} setIsMessageDialogOpen={setIsMessageDialogOpen} topic={messageTopic} message={message}/>
         </Modal>
     );
 }

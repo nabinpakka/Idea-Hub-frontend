@@ -62,12 +62,15 @@ function ComposePublication(props) {
             PublicationService.uploadPublications(
                 data
             ).then( (response) =>{
-                setMessageTopic("SUCCESSFUL")
-                setMessage("Publication composed !")
+
+                    setMessageTopic("SUCCESSFUL")
+                    setMessage("Publication composed !")
+
                 // setIsMessageDialogOpen(true)
-            }).catch((response)=>{
+            }).catch((error)=>{
+                console.log(error)
                 setMessageTopic("ALERT")
-                setMessage("Upload failed")
+                setMessage("Publication with same title already exists.")
 
             });
         }

@@ -111,17 +111,17 @@ function PublicationDialog({isPublicationDialogOpen,setIsPublicationDialogOpen,c
         <Modal
             isOpen={isPublicationDialogOpen}
             style={{
-                // overlay: {
-                // },
+                overlay: {
+                },
                 content: {
-                    top                   : '50%',
-                    left                  : '50%',
+                    top                   : '10%',
+                    left                  : '25%',
                     right                 : 'auto',
                     bottom                : 'auto',
                     marginRight           : '-50%',
-                    transform             : 'translate(-50%, -50%)',
+                    // transform             : 'translate(-50%, -50%)',
                     borderRadius          : '20px',
-                    autofocus             : true
+                    // autofocus             : true
                 }
             }}
             onRequestClose={()=>setIsPublicationDialogOpen(false)}

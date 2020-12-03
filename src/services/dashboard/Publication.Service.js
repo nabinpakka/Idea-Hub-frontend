@@ -75,7 +75,10 @@ const uploadPublications=async(data)=>{
     }).then((response)=>{
         console.log("upload"+response)
         return response.data
-    }).catch(e=>console.log(e))
+    }).catch((error)=>{
+        console.log(error)
+        return error;
+    })
 }
 
 export default {
